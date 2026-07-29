@@ -1,0 +1,32 @@
+groups:
+  - name: credit-risk-api
+    rules:
+      - alert: CreditRiskApiUnavailable
+        expr: up{job="credit-risk-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Credit risk decision-support API is unavailable
+      - alert: CreditRiskApiHighErrorRate
+        expr: |
+          sum(rate(credit_risk_score_requests_total{outcome="error"}[5m]))
+          /
+          clamp_min(sum(rate(credit_risk_score_requests_total[5m])), 0.001)
+          > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Scoring error rate is above 5%
+      - alert: CreditRiskApiP95Latency
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(credit_risk_score_latency_seconds_bucket[5m])) by (le)
+          ) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: P95 scoring latency exceeds 500 ms

@@ -1,0 +1,3 @@
+relationship 379806bb-6a87-4ae2-88ce-3bf64234d1bd
+	fromColumn: Applications.risk_band
+	toColumn: 'Risk Bands'.risk_band

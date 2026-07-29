@@ -1,0 +1,53 @@
+{
+  "development": {
+    "brier": 0.1176137945468047,
+    "calibration_intercept": 0.0011707016421777495,
+    "calibration_slope": 1.0007018729776331,
+    "default_rate": 0.16042941707635197,
+    "defaults": 4797,
+    "gini": 0.4882167398548036,
+    "ks": 0.3633063815378557,
+    "log_loss": 0.38453683778678016,
+    "observations": 29901,
+    "pr_auc": 0.3921181692727625,
+    "precision": 0.3601327944572748,
+    "roc_auc": 0.7441083699274018,
+    "sensitivity": 0.5201167396289348,
+    "specificity": 0.8234145952836202,
+    "threshold": 0.22
+  },
+  "out_of_time": {
+    "brier": 0.13446153064887928,
+    "calibration_intercept": 0.20986688560172523,
+    "calibration_slope": 0.9808991033630107,
+    "default_rate": 0.18831330294239537,
+    "defaults": 2272,
+    "gini": 0.4752691452503439,
+    "ks": 0.36133801558457246,
+    "log_loss": 0.42863380464024786,
+    "observations": 12065,
+    "pr_auc": 0.42127175899107694,
+    "precision": 0.3984547461368653,
+    "roc_auc": 0.737634572625172,
+    "sensitivity": 0.4766725352112676,
+    "specificity": 0.8330440110282855,
+    "threshold": 0.22
+  },
+  "validation": {
+    "brier": 0.12581623994232974,
+    "calibration_intercept": 0.0448482600841379,
+    "calibration_slope": 0.9693204327241965,
+    "default_rate": 0.1730195558501823,
+    "defaults": 1044,
+    "gini": 0.46563011079630523,
+    "ks": 0.3358394950821183,
+    "log_loss": 0.4064272487291479,
+    "observations": 6034,
+    "pr_auc": 0.40311839890115014,
+    "precision": 0.35613540197461213,
+    "roc_auc": 0.7328150553981526,
+    "sensitivity": 0.4837164750957854,
+    "specificity": 0.8170340681362726,
+    "threshold": 0.22
+  }
+}

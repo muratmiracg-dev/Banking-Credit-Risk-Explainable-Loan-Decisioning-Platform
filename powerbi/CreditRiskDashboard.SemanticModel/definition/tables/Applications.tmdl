@@ -1,0 +1,106 @@
+table Applications
+	lineageTag: 0f690098-e381-4b47-99c2-a332118e58dd
+
+	measure 'Applications' = COUNTROWS(Applications)
+		formatString: #,0
+
+	measure 'Observed Default Rate' = AVERAGE(Applications[default_12m])
+		formatString: 0.0%
+
+	measure 'Average Predicted PD' = AVERAGE(Applications[predicted_pd])
+		formatString: 0.0%
+
+	measure 'Approval Recommendation Rate' =
+			DIVIDE(
+				CALCULATE([Applications], Applications[recommendation] = "APPROVE_RECOMMENDATION"),
+				[Applications]
+			)
+		formatString: 0.0%
+
+	measure 'Human Review Rate' = AVERAGE(Applications[human_review_required_numeric])
+		formatString: 0.0%
+
+	measure 'Requested Exposure' = SUM(Applications[requested_amount])
+		formatString: ₺#,0,,.0 M
+
+	measure 'Illustrative Expected Loss' = SUM(Applications[expected_loss])
+		formatString: ₺#,0,,.0 M
+
+	measure 'Expected Loss Rate' = DIVIDE([Illustrative Expected Loss], [Requested Exposure])
+		formatString: 0.00%
+
+	column application_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: application_id
+
+	column application_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: application_date
+
+	column sample_split
+		dataType: string
+		summarizeBy: none
+		sourceColumn: sample_split
+
+	column channel
+		dataType: string
+		summarizeBy: none
+		sourceColumn: channel
+
+	column region
+		dataType: string
+		summarizeBy: none
+		sourceColumn: region
+
+	column requested_amount
+		dataType: double
+		formatString: ₺#,0
+		sourceColumn: requested_amount
+
+	column default_12m
+		dataType: int64
+		formatString: 0
+		sourceColumn: default_12m
+
+	column predicted_pd
+		dataType: double
+		formatString: 0.0%
+		sourceColumn: predicted_pd
+
+	column credit_score
+		dataType: int64
+		formatString: 0
+		sourceColumn: credit_score
+
+	column risk_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: risk_band
+
+	column recommendation
+		dataType: string
+		summarizeBy: none
+		sourceColumn: recommendation
+
+	column expected_loss
+		dataType: double
+		formatString: ₺#,0
+		sourceColumn: expected_loss
+
+	column human_review_required_numeric
+		dataType: int64
+		formatString: 0
+		sourceColumn: human_review_required_numeric
+
+	partition Applications = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(PostgreSQLServer, PostgreSQLDatabase),
+				    Applications = Source{[Schema="credit_risk",Item="loan_application"]}[Data],
+				    AddReviewFlag = Table.AddColumn(Applications, "human_review_required_numeric", each if [human_review_required] then 1 else 0, Int64.Type)
+				in
+				    AddReviewFlag

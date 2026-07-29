@@ -1,0 +1,5 @@
+expression PostgreSQLServer = "localhost" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 33d1ad18-efab-4b75-a3ec-f03532290f5e
+
+expression PostgreSQLDatabase = "credit_risk" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 4b529f08-fcb8-4989-902d-e4ace4f07244

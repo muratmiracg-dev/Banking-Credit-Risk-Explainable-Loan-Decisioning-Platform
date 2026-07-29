@@ -1,0 +1,35 @@
+{
+  "name": "Aurelia Credit Risk",
+  "dataColors": [
+    "#0F766E",
+    "#2563EB",
+    "#D97706",
+    "#B42318",
+    "#64748B",
+    "#14B8A6"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#0B1F3A",
+  "tableAccent": "#0F766E",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [
+          {
+            "fontFamily": "Segoe UI Semibold",
+            "fontSize": 12,
+            "fontColor": {"solid": {"color": "#0B1F3A"}},
+            "alignment": "left"
+          }
+        ],
+        "background": [
+          {
+            "show": true,
+            "color": {"solid": {"color": "#FFFFFF"}},
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

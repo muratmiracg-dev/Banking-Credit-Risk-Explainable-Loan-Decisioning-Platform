@@ -1,0 +1,22 @@
+table 'Risk Bands'
+	lineageTag: 09159275-0d21-44cd-80c4-2821c2cbfd52
+
+	column risk_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: risk_band
+		sortByColumn: sort_order
+
+	column sort_order
+		dataType: int64
+		formatString: 0
+		sourceColumn: sort_order
+
+	column policy_label
+		dataType: string
+		summarizeBy: none
+		sourceColumn: policy_label
+
+	partition 'Risk Bands' = calculated
+		mode: import
+		source = DATATABLE("risk_band", STRING, "sort_order", INTEGER, "policy_label", STRING, {{"A",1,"Low"},{"B",2,"Low"},{"C",3,"Approve boundary"},{"D",4,"Refer"},{"E",5,"Refer boundary"},{"F",6,"Decline recommendation"}})

@@ -1,0 +1,49 @@
+project:
+  name: Banking Credit Risk & Explainable Loan Decisioning Platform
+  institution: Aurelia Bank
+  version: 1.0.0
+  owner: Model Risk & Retail Credit Analytics
+  purpose: Human-in-the-loop decision support for synthetic unsecured consumer loan applications
+  synthetic_only: true
+  production_decisions_permitted: false
+
+data:
+  rows: 48000
+  seed: 20250729
+  start_date: "2022-01-01"
+  end_date: "2025-12-31"
+  target: default_12m
+  development_end: "2024-06-30"
+  validation_end: "2024-12-31"
+
+model:
+  champion: logistic_regression
+  challengers:
+    - histogram_gradient_boosting
+    - random_forest
+  minimum_oot_auc: 0.70
+  calibration_slope_range: [0.75, 1.25]
+  protected_attributes_excluded:
+    - gender
+    - age_band
+  application_time_only: true
+
+policy:
+  approve_max_pd: 0.10
+  refer_max_pd: 0.22
+  lgd_assumption: 0.45
+  score_anchor: 650
+  score_anchor_pd: 0.10
+  points_to_double_odds: 50
+  mandatory_human_review:
+    - REFER
+    - DECLINE_RECOMMENDATION
+  final_decision_owner: Authorized credit officer
+
+monitoring:
+  score_psi_warning: 0.10
+  score_psi_critical: 0.25
+  auc_drop_warning: 0.03
+  auc_drop_critical: 0.05
+  approval_rate_change_warning: 0.08
+  missing_rate_critical: 0.02

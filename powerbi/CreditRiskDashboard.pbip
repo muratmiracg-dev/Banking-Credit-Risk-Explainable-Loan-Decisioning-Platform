@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "artifacts": [
+    {
+      "report": {
+        "path": "CreditRiskDashboard.Report"
+      }
+    },
+    {
+      "semanticModel": {
+        "path": "CreditRiskDashboard.SemanticModel"
+      }
+    }
+  ],
+  "settings": {
+    "enableAutoRecovery": true
+  }
+}

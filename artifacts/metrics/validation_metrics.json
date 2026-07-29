@@ -1,0 +1,53 @@
+{
+  "histogram_gradient_boosting": {
+    "brier": 0.12694532361145175,
+    "calibration_intercept": 0.07733525300028118,
+    "calibration_slope": 0.9922808729961365,
+    "default_rate": 0.1730195558501823,
+    "defaults": 1044,
+    "gini": 0.45018158923210416,
+    "ks": 0.3233121415244282,
+    "log_loss": 0.4105822861181865,
+    "observations": 6034,
+    "pr_auc": 0.3912818437901343,
+    "precision": 0.36249073387694586,
+    "roc_auc": 0.7250907946160521,
+    "sensitivity": 0.46839080459770116,
+    "specificity": 0.8276553106212425,
+    "threshold": 0.22
+  },
+  "logistic_regression": {
+    "brier": 0.12581623994232974,
+    "calibration_intercept": 0.0448482600841379,
+    "calibration_slope": 0.9693204327241965,
+    "default_rate": 0.1730195558501823,
+    "defaults": 1044,
+    "gini": 0.46563011079630523,
+    "ks": 0.3358394950821183,
+    "log_loss": 0.4064272487291479,
+    "observations": 6034,
+    "pr_auc": 0.40311839890115014,
+    "precision": 0.35613540197461213,
+    "roc_auc": 0.7328150553981526,
+    "sensitivity": 0.4837164750957854,
+    "specificity": 0.8170340681362726,
+    "threshold": 0.22
+  },
+  "random_forest": {
+    "brier": 0.12772873637838167,
+    "calibration_intercept": 0.044054956685438705,
+    "calibration_slope": 0.9727183125861637,
+    "default_rate": 0.1730195558501823,
+    "defaults": 1044,
+    "gini": 0.43923172014527134,
+    "ks": 0.31406644707038595,
+    "log_loss": 0.4130074130437516,
+    "observations": 6034,
+    "pr_auc": 0.386674441330254,
+    "precision": 0.35662824207492794,
+    "roc_auc": 0.7196158600726357,
+    "sensitivity": 0.47413793103448276,
+    "specificity": 0.8210420841683367,
+    "threshold": 0.22
+  }
+}

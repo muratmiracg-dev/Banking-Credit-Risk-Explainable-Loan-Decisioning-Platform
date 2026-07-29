@@ -1,0 +1,59 @@
+table Monitoring
+	lineageTag: 2181805c-5b65-427b-b074-a09495f22b63
+
+	measure 'Latest ROC AUC' =
+			VAR LatestMonth = MAX(Monitoring[monitoring_month])
+			RETURN CALCULATE(MAX(Monitoring[roc_auc]), Monitoring[monitoring_month] = LatestMonth)
+		formatString: 0.000
+
+	measure 'Maximum Score PSI' = MAX(Monitoring[score_psi])
+		formatString: 0.000
+
+	measure 'Alert Months' =
+			CALCULATE(COUNTROWS(Monitoring), Monitoring[alert_status] <> "GREEN")
+		formatString: #,0
+
+	column monitoring_month
+		dataType: dateTime
+		formatString: yyyy-mm
+		summarizeBy: none
+		sourceColumn: monitoring_month
+
+	column applications
+		dataType: int64
+		formatString: #,0
+		sourceColumn: applications
+
+	column roc_auc
+		dataType: double
+		formatString: 0.000
+		sourceColumn: roc_auc
+
+	column brier
+		dataType: double
+		formatString: 0.000
+		sourceColumn: brier
+
+	column score_psi
+		dataType: double
+		formatString: 0.000
+		sourceColumn: score_psi
+
+	column approval_rate
+		dataType: double
+		formatString: 0.0%
+		sourceColumn: approval_rate
+
+	column alert_status
+		dataType: string
+		summarizeBy: none
+		sourceColumn: alert_status
+
+	partition Monitoring = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(PostgreSQLServer, PostgreSQLDatabase),
+				    Monitoring = Source{[Schema="credit_risk",Item="model_monitoring_monthly"]}[Data]
+				in
+				    Monitoring

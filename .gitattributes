@@ -1,0 +1,9 @@
+* text=auto eol=lf
+
+*.gz binary
+*.joblib binary
+*.pdf binary
+*.png binary
+*.pptx binary
+*.webp binary
+*.xlsx binary

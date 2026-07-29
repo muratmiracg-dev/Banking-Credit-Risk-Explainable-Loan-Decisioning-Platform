@@ -1,0 +1,43 @@
+table Fairness
+	lineageTag: 44a5f5cf-a9fe-44a8-b7a7-6ea98389588e
+
+	measure 'Maximum DP Difference' = MAX(Fairness[demographic_parity_difference])
+		formatString: 0.0%
+
+	measure 'Maximum EO Difference' = MAX(Fairness[equal_opportunity_difference])
+		formatString: 0.0%
+
+	column model_version
+		dataType: string
+		summarizeBy: none
+		sourceColumn: model_version
+
+	column audit_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: audit_date
+
+	column protected_attribute
+		dataType: string
+		summarizeBy: none
+		sourceColumn: protected_attribute
+
+	column demographic_parity_difference
+		dataType: double
+		formatString: 0.0%
+		sourceColumn: demographic_parity_difference
+
+	column equal_opportunity_difference
+		dataType: double
+		formatString: 0.0%
+		sourceColumn: equal_opportunity_difference
+
+	partition Fairness = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database(PostgreSQLServer, PostgreSQLDatabase),
+				    Fairness = Source{[Schema="credit_risk_governance",Item="vw_fairness_disparity"]}[Data]
+				in
+				    Fairness

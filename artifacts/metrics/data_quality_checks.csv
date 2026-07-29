@@ -1,0 +1,7 @@
+check_id,control,actual,expected,status
+DQ-001,Expected schema present,28,28,PASS
+DQ-002,Application ID unique,48000,48000,PASS
+DQ-003,Target binary,"0,1","0,1",PASS
+DQ-004,Model feature completeness,0,0,PASS
+DQ-005,Synthetic-only safety flag,True,True,PASS
+DQ-006,Production decisions disabled,False,False,PASS

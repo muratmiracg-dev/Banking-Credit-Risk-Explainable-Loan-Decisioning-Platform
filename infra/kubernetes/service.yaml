@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: credit-risk-api
+  namespace: credit-risk
+spec:
+  selector:
+    app.kubernetes.io/name: credit-risk-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

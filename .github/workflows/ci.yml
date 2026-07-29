@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: pip install -e ".[dev,reporting]"
+      - name: Lint
+        run: |
+          ruff check src tests scripts
+          ruff format --check src tests scripts
+      - name: Rebuild deterministic analytics
+        run: |
+          MPLCONFIGDIR=/tmp/mpl-credit-risk python scripts/run_pipeline.py
+          sha256sum artifacts/data/synthetic_loan_applications.csv.gz > /tmp/first.sha256
+          MPLCONFIGDIR=/tmp/mpl-credit-risk python scripts/run_pipeline.py
+          sha256sum artifacts/data/synthetic_loan_applications.csv.gz > /tmp/second.sha256
+          diff /tmp/first.sha256 /tmp/second.sha256
+      - name: Test with coverage
+        run: pytest
+      - name: Validate generated evidence
+        run: |
+          test -s artifacts/metrics/executive_summary.json
+          test -s artifacts/metrics/fairness_summary.csv
+          test -s artifacts/monitoring/monthly_monitoring.csv
+          test -s artifacts/explanations/global_linear_shap_importance.csv
+
+  package:
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build hardened API image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: credit-risk-platform:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

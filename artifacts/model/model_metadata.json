@@ -1,0 +1,49 @@
+{
+  "decision_scope": "Decision support only; no automated production lending decision",
+  "development_window": [
+    "2022-01-01",
+    "2024-06-30"
+  ],
+  "linear_shap_additivity_max_error": 2.6645352591003757e-15,
+  "linear_shap_expected_log_odds": -1.9304353217199195,
+  "model_features": [
+    "monthly_income",
+    "requested_amount",
+    "term_months",
+    "employment_tenure_months",
+    "existing_debt",
+    "monthly_debt_payment",
+    "debt_to_income",
+    "credit_history_months",
+    "delinquencies_12m",
+    "delinquencies_36m",
+    "revolving_utilization",
+    "inquiries_6m",
+    "open_accounts",
+    "bureau_score",
+    "savings_balance",
+    "current_account_balance",
+    "prior_customer_months",
+    "channel",
+    "region",
+    "employment_type",
+    "housing_status",
+    "purpose",
+    "income_verified"
+  ],
+  "model_name": "logistic_regression",
+  "out_of_time_window": [
+    "2025-01-01",
+    "2025-12-31"
+  ],
+  "protected_attributes_excluded": [
+    "gender",
+    "age_band"
+  ],
+  "target": "default_12m",
+  "validation_window": [
+    "2024-07-01",
+    "2024-12-31"
+  ],
+  "version": "1.0.0"
+}
