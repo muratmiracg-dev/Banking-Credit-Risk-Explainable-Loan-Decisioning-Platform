@@ -19,6 +19,10 @@
 
 `Illustrative expected loss = PD × 45% LGD × requested amount`
 
+Before policy assignment, the control layer requires one finite PD in the inclusive `[0, 1]`
+range for each application and a finite, non-negative requested amount. Invalid or misaligned
+inputs fail closed instead of producing a score, recommendation or expected-loss estimate.
+
 This is a scenario bridge, not IFRS 9 impairment measurement. It excludes staging, significant
 increase in credit risk, lifetime PD, discounting, recovery timing and forward-looking
 macroeconomic scenarios.
