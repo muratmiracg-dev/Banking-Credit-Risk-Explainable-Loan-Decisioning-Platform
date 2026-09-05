@@ -39,6 +39,33 @@ class PolicyTests(unittest.TestCase):
         self.assertAlmostEqual(result.loc[0, "expected_loss"], 4_500.0)
         self.assertTrue(result.loc[1, "human_review_required"])
 
+    def test_probability_boundaries_are_supported(self) -> None:
+        scores = pd_to_score(np.array([0.0, 1.0]), self.policy)
+        self.assertEqual(scores.tolist(), [850, 300])
+
+    def test_policy_rejects_invalid_probabilities(self) -> None:
+        frame = pd.DataFrame({"requested_amount": [100_000.0]})
+        for probability in [np.nan, np.inf, -0.01, 1.01]:
+            with (
+                self.subTest(probability=probability),
+                self.assertRaisesRegex(ValueError, "finite and between 0 and 1"),
+            ):
+                apply_policy(frame, np.array([probability]), self.policy)
+
+    def test_policy_rejects_misaligned_probabilities(self) -> None:
+        frame = pd.DataFrame({"requested_amount": [100_000.0, 50_000.0]})
+        with self.assertRaisesRegex(ValueError, "one value per application"):
+            apply_policy(frame, np.array([0.10]), self.policy)
+
+    def test_policy_rejects_invalid_requested_amounts(self) -> None:
+        for requested_amount in [-1.0, np.nan, np.inf, "invalid"]:
+            with (
+                self.subTest(requested_amount=requested_amount),
+                self.assertRaisesRegex(ValueError, "finite and non-negative"),
+            ):
+                frame = pd.DataFrame({"requested_amount": [requested_amount]})
+                apply_policy(frame, np.array([0.10]), self.policy)
+
 
 if __name__ == "__main__":
     unittest.main()
