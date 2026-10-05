@@ -32,11 +32,11 @@ PALE = "#E8EEF6"
 
 
 def _json_default(value: Any) -> Any:
-    if isinstance(value, (np.integer,)):
+    if isinstance(value, np.integer):
         return int(value)
-    if isinstance(value, (np.floating,)):
+    if isinstance(value, np.floating):
         return float(value)
-    if isinstance(value, (np.bool_,)):
+    if isinstance(value, np.bool_):
         return bool(value)
     if isinstance(value, pd.Timestamp):
         return value.isoformat()

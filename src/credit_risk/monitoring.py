@@ -17,6 +17,14 @@ def population_stability_index(
     """Calculate PSI with quantile bins and numerical safeguards."""
     reference_values = np.asarray(reference, dtype=float)
     current_values = np.asarray(current, dtype=float)
+    if isinstance(bins, bool) or not isinstance(bins, int) or bins < 2:
+        raise ValueError("bins must be an integer greater than or equal to 2")
+    if reference_values.ndim != 1 or current_values.ndim != 1:
+        raise ValueError("PSI inputs must be one-dimensional")
+    if reference_values.size == 0 or current_values.size == 0:
+        raise ValueError("PSI requires non-empty reference and current samples")
+    if not np.isfinite(reference_values).all() or not np.isfinite(current_values).all():
+        raise ValueError("PSI samples must contain only finite values")
     edges = np.unique(np.quantile(reference_values, np.linspace(0, 1, bins + 1)))
     if edges.size < 3:
         return 0.0

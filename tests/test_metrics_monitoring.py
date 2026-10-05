@@ -38,6 +38,21 @@ class MetricsMonitoringTests(unittest.TestCase):
         shifted = np.linspace(0.40, 0.99, 1000)
         self.assertGreater(population_stability_index(reference, shifted), 0.25)
 
+    def test_psi_rejects_invalid_inputs(self) -> None:
+        invalid_calls = [
+            (np.array([]), np.array([0.1]), 10),
+            (np.array([0.1, np.nan]), np.array([0.1, 0.2]), 10),
+            (np.array([0.1, 0.2]), np.array([0.1, np.inf]), 10),
+            (np.array([[0.1, 0.2]]), np.array([0.1, 0.2]), 10),
+            (np.array([0.1, 0.2]), np.array([0.1, 0.2]), 1),
+        ]
+        for reference, current, bins in invalid_calls:
+            with (
+                self.subTest(reference=reference, current=current, bins=bins),
+                self.assertRaises(ValueError),
+            ):
+                population_stability_index(reference, current, bins)
+
 
 if __name__ == "__main__":
     unittest.main()
