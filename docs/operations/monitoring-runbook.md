@@ -17,6 +17,10 @@
 | Signal | Green | Amber | Red |
 |---|---|---|---|
 | Score PSI | `< 0.10` | `0.10 to < 0.25` | `>= 0.25` |
+
+PSI calculation fails closed when either sample is empty, multidimensional or
+contains non-finite values, or when fewer than two bins are requested. Data
+contract failures must be corrected before a monitoring status is published.
 | AUC drop vs validation | `< 0.03` | `0.03 to < 0.05` | `>= 0.05` |
 | Approval-rate change | `< 8 pp` | `>= 8 pp` | Committee-defined escalation |
 | Missing model fields | `0%` | Investigate any non-zero | `>= 2%` |
