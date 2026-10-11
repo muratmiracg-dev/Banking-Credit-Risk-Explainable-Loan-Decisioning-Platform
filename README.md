@@ -1,5 +1,7 @@
 # Banking Credit Risk & Explainable Loan Decisioning Platform
 
+Model validation metrics enforce aligned binary outcomes, bounded finite probabilities, and a valid decision threshold before performance or calibration statistics are produced.
+
 [![CI](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/ci.yml/badge.svg)](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/codeql.yml/badge.svg)](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/codeql.yml)
 [![Security](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/security.yml/badge.svg)](https://github.com/muratmiracg-dev/Banking-Credit-Risk-Explainable-Loan-Decisioning-Platform/actions/workflows/security.yml)
