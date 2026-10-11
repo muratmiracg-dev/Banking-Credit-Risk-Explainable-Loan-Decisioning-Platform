@@ -18,6 +18,18 @@ class MetricsMonitoringTests(unittest.TestCase):
         self.assertAlmostEqual(metrics["sensitivity"], 1.0)
         self.assertAlmostEqual(metrics["specificity"], 1.0)
 
+    def test_binary_metrics_reject_invalid_contracts(self) -> None:
+        invalid_calls = [
+            (np.array([0, 1]), np.array([0.2]), 0.5),
+            (np.array([0, 2]), np.array([0.2, 0.8]), 0.5),
+            (np.array([0, 1]), np.array([0.2, np.nan]), 0.5),
+            (np.array([0, 1]), np.array([0.2, 1.2]), 0.5),
+            (np.array([0, 1]), np.array([0.2, 0.8]), 1.0),
+        ]
+        for truth, probability, threshold in invalid_calls:
+            with self.subTest(threshold=threshold), self.assertRaises(ValueError):
+                evaluate_binary(truth, probability, threshold)
+
     def test_deciles_capture_all_rows(self) -> None:
         rows = 100
         deciles = build_decile_table(

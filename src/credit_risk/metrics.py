@@ -38,6 +38,16 @@ def evaluate_binary(
     """Return discrimination, calibration and threshold diagnostics."""
     truth = np.asarray(y_true, dtype=int)
     probability = np.asarray(probability, dtype=float)
+    if truth.ndim != 1 or probability.ndim != 1 or len(truth) != len(probability):
+        raise ValueError("truth and probability must be aligned one-dimensional arrays")
+    if len(truth) == 0 or not np.isfinite(probability).all():
+        raise ValueError("probability must contain finite values for at least one observation")
+    if not set(np.unique(truth)).issubset({0, 1}):
+        raise ValueError("truth must contain only binary 0/1 outcomes")
+    if ((probability < 0) | (probability > 1)).any():
+        raise ValueError("probability values must be between 0 and 1")
+    if not np.isfinite(adverse_threshold) or not 0 < adverse_threshold < 1:
+        raise ValueError("adverse_threshold must be strictly between 0 and 1")
     prediction = (probability >= adverse_threshold).astype(int)
     auc = _safe_auc(truth, probability)
     fpr, tpr, _ = roc_curve(truth, probability)
