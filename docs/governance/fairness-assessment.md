@@ -6,6 +6,11 @@ The assessment checks whether recommendation allocation and predictive behavior 
 synthetic `gender` and `age_band` groups. It is a diagnostic input to governance, not a legal
 or moral definition of fairness.
 
+The audit fails closed before computing group metrics when required columns or protected
+attributes are missing, group labels are blank, outcomes are not binary, or predicted
+probabilities are non-finite or outside `[0, 1]`. This prevents malformed scoring data from
+producing apparently valid governance evidence.
+
 ## Separation control
 
 - Protected attributes do not enter preprocessing, training or scoring.
