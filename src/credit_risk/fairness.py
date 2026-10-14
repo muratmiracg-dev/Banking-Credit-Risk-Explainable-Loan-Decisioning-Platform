@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 from sklearn.metrics import brier_score_loss, roc_auc_score
 
@@ -33,6 +34,30 @@ def fairness_audit(
     scored_frame: pd.DataFrame, protected_attributes: list[str]
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Assess approval allocation and predictive performance by protected group."""
+    required_columns = {"recommendation", "default_12m", "predicted_pd"}
+    missing_columns = sorted(required_columns.difference(scored_frame.columns))
+    if missing_columns:
+        raise ValueError(f"Fairness audit is missing required columns: {missing_columns}")
+    if scored_frame.empty:
+        raise ValueError("Fairness audit requires at least one scored application")
+    if not protected_attributes or len(protected_attributes) != len(set(protected_attributes)):
+        raise ValueError("Protected attributes must be a non-empty list without duplicates")
+    missing_attributes = sorted(set(protected_attributes).difference(scored_frame.columns))
+    if missing_attributes:
+        raise ValueError(f"Fairness audit is missing protected attributes: {missing_attributes}")
+
+    predicted_pd = pd.to_numeric(scored_frame["predicted_pd"], errors="coerce")
+    if not np.isfinite(predicted_pd.to_numpy(dtype=float)).all() or not predicted_pd.between(0, 1).all():
+        raise ValueError("predicted_pd must contain finite probabilities in [0, 1]")
+    outcomes = pd.to_numeric(scored_frame["default_12m"], errors="coerce")
+    if outcomes.isna().any() or not outcomes.isin([0, 1]).all():
+        raise ValueError("default_12m must contain only binary 0/1 outcomes")
+    for attribute in protected_attributes:
+        labels = scored_frame[attribute]
+        if labels.isna().any() or labels.astype(str).str.strip().eq("").any():
+            raise ValueError(f"Protected attribute {attribute!r} contains missing or blank labels")
+
+    scored_frame = scored_frame.assign(predicted_pd=predicted_pd, default_12m=outcomes.astype(int))
     details: list[pd.DataFrame] = []
     summaries: list[dict[str, float | str]] = []
     for attribute in protected_attributes:
