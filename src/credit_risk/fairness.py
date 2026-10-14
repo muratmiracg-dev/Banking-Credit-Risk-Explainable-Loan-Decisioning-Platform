@@ -47,7 +47,10 @@ def fairness_audit(
         raise ValueError(f"Fairness audit is missing protected attributes: {missing_attributes}")
 
     predicted_pd = pd.to_numeric(scored_frame["predicted_pd"], errors="coerce")
-    if not np.isfinite(predicted_pd.to_numpy(dtype=float)).all() or not predicted_pd.between(0, 1).all():
+    if (
+        not np.isfinite(predicted_pd.to_numpy(dtype=float)).all()
+        or not predicted_pd.between(0, 1).all()
+    ):
         raise ValueError("predicted_pd must contain finite probabilities in [0, 1]")
     outcomes = pd.to_numeric(scored_frame["default_12m"], errors="coerce")
     if outcomes.isna().any() or not outcomes.isin([0, 1]).all():
