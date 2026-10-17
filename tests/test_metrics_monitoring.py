@@ -56,6 +56,8 @@ class MetricsMonitoringTests(unittest.TestCase):
             (np.array([0.1, np.nan]), np.array([0.1, 0.2]), 10),
             (np.array([0.1, 0.2]), np.array([0.1, np.inf]), 10),
             (np.array([[0.1, 0.2]]), np.array([0.1, 0.2]), 10),
+            (np.array([0.1, True], dtype=object), np.array([0.1, 0.2]), 10),
+            (np.array([0.1, "0.2"], dtype=object), np.array([0.1, 0.2]), 10),
             (np.array([0.1, 0.2]), np.array([0.1, 0.2]), 1),
         ]
         for reference, current, bins in invalid_calls:
