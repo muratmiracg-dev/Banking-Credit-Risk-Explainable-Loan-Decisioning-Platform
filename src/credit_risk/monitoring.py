@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import numbers
 from typing import Any
 
 import numpy as np
@@ -15,12 +16,21 @@ def population_stability_index(
     bins: int = 10,
 ) -> float:
     """Calculate PSI with quantile bins and numerical safeguards."""
-    reference_values = np.asarray(reference, dtype=float)
-    current_values = np.asarray(current, dtype=float)
+    raw_reference = np.asarray(reference, dtype=object)
+    raw_current = np.asarray(current, dtype=object)
+    if any(
+        values.ndim != 1
+        or any(
+            isinstance(value, (bool, np.bool_)) or not isinstance(value, numbers.Real)
+            for value in values
+        )
+        for values in (raw_reference, raw_current)
+    ):
+        raise ValueError("PSI inputs must be one-dimensional numeric values, not booleans")
+    reference_values = np.asarray(raw_reference, dtype=float)
+    current_values = np.asarray(raw_current, dtype=float)
     if isinstance(bins, bool) or not isinstance(bins, int) or bins < 2:
         raise ValueError("bins must be an integer greater than or equal to 2")
-    if reference_values.ndim != 1 or current_values.ndim != 1:
-        raise ValueError("PSI inputs must be one-dimensional")
     if reference_values.size == 0 or current_values.size == 0:
         raise ValueError("PSI requires non-empty reference and current samples")
     if not np.isfinite(reference_values).all() or not np.isfinite(current_values).all():
