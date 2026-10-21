@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from credit_risk.metrics import build_decile_table, evaluate_binary
-from credit_risk.monitoring import population_stability_index
+from credit_risk.monitoring import monitoring_report, population_stability_index
 
 
 class MetricsMonitoringTests(unittest.TestCase):
@@ -66,6 +66,23 @@ class MetricsMonitoringTests(unittest.TestCase):
                 self.assertRaises(ValueError),
             ):
                 population_stability_index(reference, current, bins)
+
+    def test_monitoring_rejects_misaligned_or_overlapping_masks(self) -> None:
+        frame = pd.DataFrame(
+            {
+                "application_date": pd.to_datetime(["2026-01-01", "2026-02-01"]),
+                "default_12m": [0, 1],
+                "predicted_pd": [0.1, 0.9],
+                "recommendation": ["REFER", "REFER"],
+                "bureau_score": [700, 600],
+                "debt_to_income": [0.2, 0.4],
+            }
+        )
+        config = {"monitoring": {}}
+        with self.assertRaisesRegex(ValueError, "aligned"):
+            monitoring_report(frame, pd.Series([True]), pd.Series([False]), config)
+        with self.assertRaisesRegex(ValueError, "disjoint"):
+            monitoring_report(frame, pd.Series([True, False]), pd.Series([True, False]), config)
 
 
 if __name__ == "__main__":

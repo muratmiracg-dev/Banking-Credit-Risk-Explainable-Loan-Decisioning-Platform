@@ -64,6 +64,31 @@ def monitoring_report(
     config: dict[str, Any],
 ) -> pd.DataFrame:
     """Create monthly OOT monitoring with explicit alert thresholds."""
+    required = {
+        "application_date",
+        "default_12m",
+        "predicted_pd",
+        "recommendation",
+        "bureau_score",
+        "debt_to_income",
+    }
+    missing = sorted(required - set(scored_frame.columns))
+    if missing:
+        raise ValueError("monitoring frame is missing required columns: " + ", ".join(missing))
+    if (
+        scored_frame.empty
+        or len(development_mask) != len(scored_frame)
+        or len(validation_mask) != len(scored_frame)
+    ):
+        raise ValueError("monitoring masks must be aligned with a non-empty scored frame")
+    if development_mask.dtype != bool or validation_mask.dtype != bool:
+        raise ValueError("monitoring masks must be boolean")
+    if (
+        (development_mask & validation_mask).any()
+        or not development_mask.any()
+        or not validation_mask.any()
+    ):
+        raise ValueError("development and validation masks must be non-empty and disjoint")
     thresholds = config["monitoring"]
     reference = scored_frame.loc[development_mask]
     validation = scored_frame.loc[validation_mask]
