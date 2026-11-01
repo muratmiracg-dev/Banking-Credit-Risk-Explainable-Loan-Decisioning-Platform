@@ -17,8 +17,8 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main() -> None:
-    args = build_parser().parse_args()
+def main(argv: list[str] | None = None) -> None:
+    args = build_parser().parse_args(argv)
     manifest = run_pipeline(Path(args.root), args.config)
     print(manifest_as_json(manifest))
 
