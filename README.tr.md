@@ -53,10 +53,16 @@ uygun kabul edilmemiştir.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[dev,reporting]"
+python -m pip install -r requirements-dev.txt
+python -m pip install --no-deps -e .
 python scripts/run_pipeline.py
 pytest
 ```
+
+Bağımlılıklar `requirements.txt` içinde tam sürüme sabitlenmiştir: kayıtlı model scikit-learn
+1.8.0 ile kaydedilmiştir ve yeni sürümler challenger metriklerini değiştirir. CI pipeline'ı
+yeniden çalıştırır ve `scripts/compare_artifacts.py` kayıtlı CSV/JSON çıktılarında sapma
+bulursa başarısız olur.
 
 API'yi çalıştırmak için:
 

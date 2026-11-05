@@ -9,13 +9,15 @@ WORKDIR /app
 
 RUN addgroup --system app && adduser --system --ingroup app --uid 10001 app
 
-COPY pyproject.toml README.md ./
+COPY requirements.txt pyproject.toml README.md ./
 COPY src ./src
 COPY config ./config
 COPY artifacts/model ./artifacts/model
 COPY artifacts/metrics/executive_summary.json ./artifacts/metrics/executive_summary.json
 
-RUN pip install --no-cache-dir .
+# Install the exact versions the committed model was pickled with, then the package.
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir --no-deps .
 
 USER 10001
 EXPOSE 8000
