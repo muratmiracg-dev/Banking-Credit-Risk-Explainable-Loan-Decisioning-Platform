@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Pinned runtime and development dependencies exactly. The committed model is pickled with
+  scikit-learn 1.8.0; unpinned installs (including the Docker image) pulled scikit-learn 1.9,
+  which loads the pickle across versions and changes the challenger metrics.
+- CI now compares the regenerated CSV/JSON evidence with the committed artifacts
+  (`scripts/compare_artifacts.py`) instead of only checking that two reruns agree.
+
 ## 1.0.0 - 2026-07-29
 
 ### Added

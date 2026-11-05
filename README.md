@@ -117,13 +117,19 @@ They do not enter model training, online scoring or reason-code generation.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[dev,reporting]"
+python -m pip install -r requirements-dev.txt
+python -m pip install --no-deps -e .
 python scripts/run_pipeline.py
 pytest
 ```
 
 The pipeline regenerates the portfolio, champion model, validation evidence, SHAP artifacts,
 fairness audit, monthly monitoring and analytical plots.
+
+Dependencies are pinned exactly in `requirements.txt`: the committed model is pickled with
+scikit-learn 1.8.0 and newer scikit-learn releases change the challenger metrics. CI reruns the
+pipeline and fails if `scripts/compare_artifacts.py` finds the regenerated CSV/JSON evidence
+drifting from the committed files.
 
 ### Recommendation API
 

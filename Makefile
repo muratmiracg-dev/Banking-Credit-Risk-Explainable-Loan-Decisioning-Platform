@@ -1,7 +1,8 @@
 .PHONY: install pipeline test lint run-api verify clean
 
 install:
-	python -m pip install -e ".[dev,reporting]"
+	python -m pip install -r requirements-dev.txt
+	python -m pip install --no-deps -e .
 
 pipeline:
 	PYTHONPATH=src MPLCONFIGDIR=/tmp/mpl-credit-risk python scripts/run_pipeline.py
