@@ -18,14 +18,14 @@ dependencies = [
   "prometheus-client>=0.21,<1",
   "pydantic>=2.10,<3",
   "PyYAML>=6.0,<7",
-  "scikit-learn>=1.6,<2",
+  "scikit-learn>=1.8,<1.9",  # committed model pickle is 1.8.0
   "uvicorn[standard]>=0.34,<1",
 ]
 
 [project.optional-dependencies]
 dev = [
   "httpx>=0.28,<1",
-  "pytest>=8.3,<9",
+  "pytest>=9.0.3,<10",
   "pytest-cov>=6,<7",
   "ruff>=0.9,<1",
 ]
