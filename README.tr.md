@@ -28,6 +28,8 @@ izleme katmanlarını tek bir yönetişim mimarisinde birleştirir.
 | Onay önerisi oranı | **%41,7** |
 | Onay önerisi grubunda gözlenen temerrüt | **%7,9** |
 | Maksimum aylık skor PSI | **0,017** |
+| OOT gerçekleşen/beklenen temerrüt (A/E) | **1,19** (gözlenen %18,8, tahmin %15,9) |
+| Aylık izleme durumu (OOT) | **4 KIRMIZI / 6 SARI / 2 YEŞİL** (kalibrasyon) |
 | Maksimum SHAP additivity hatası | **2,66e-15** |
 
 Adalet denetimi cinsiyet gruplarında **1,6 yüzde puan**, yaş gruplarında ise **36,7 yüzde

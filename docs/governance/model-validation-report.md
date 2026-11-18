@@ -29,6 +29,7 @@ review.
 | VAL-03 | SHAP additivity error is negligible | Pass | 2.66e-15 | Accept |
 | VAL-04 | Data and safety checks pass | Pass | 6/6 | Accept |
 | VAL-05 | Monthly score PSI remains below warning | Pass | max 0.017 | Continue monitoring |
+| VAL-09 | OOT PDs under-predict observed defaults | High | A/E 1.19 overall; 4 RED and 6 AMBER months (A/E 1.14-1.39) | Recalibrate intercept or overlay before any expected-loss use |
 | VAL-06 | Age-band allocation disparity | High | DP 36.7 pp; EO 37.5 pp | Governance review required |
 | VAL-07 | Data are synthetic | High | Generator and disclaimer | Prohibit real use |
 | VAL-08 | No independent validation | High | Portfolio project status | Required before pilot |

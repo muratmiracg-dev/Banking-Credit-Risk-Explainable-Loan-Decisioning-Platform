@@ -46,4 +46,9 @@ monitoring:
   auc_drop_warning: 0.03
   auc_drop_critical: 0.05
   approval_rate_change_warning: 0.08
+  # Calibration-in-the-large: actual-to-expected defaults. Escalate only when the
+  # deviation is also statistically significant (|z| >= calibration_z_minimum).
+  calibration_ae_warning: 0.10
+  calibration_ae_critical: 0.20
+  calibration_z_minimum: 1.96
   missing_rate_critical: 0.02

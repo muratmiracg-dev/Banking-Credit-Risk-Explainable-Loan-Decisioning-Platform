@@ -153,6 +153,14 @@ def run_pipeline(
         "human_review_rate": float(scored.loc[oot, "human_review_required"].mean()),
         "expected_loss_total": float(scored.loc[oot, "expected_loss"].sum()),
         "maximum_monthly_score_psi": float(monitoring["score_psi"].max()),
+        "oot_mean_predicted_pd": float(scored.loc[oot, "predicted_pd"].mean()),
+        "oot_actual_to_expected_defaults": float(
+            scored.loc[oot, TARGET].sum() / scored.loc[oot, "predicted_pd"].sum()
+        ),
+        "monitoring_months_by_status": {
+            status: int((monitoring["alert_status"] == status).sum())
+            for status in ("GREEN", "AMBER", "RED")
+        },
         "fairness_max_demographic_parity_difference": float(
             fairness_summary["demographic_parity_difference"].max()
         ),
