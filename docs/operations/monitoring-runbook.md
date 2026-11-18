@@ -23,7 +23,13 @@ contains non-finite values, boolean or numeric-text observations, or when fewer 
 contract failures must be corrected before a monitoring status is published.
 | AUC drop vs validation | `< 0.03` | `0.03 to < 0.05` | `>= 0.05` |
 | Approval-rate change | `< 8 pp` | `>= 8 pp` | Committee-defined escalation |
+| Actual-to-expected defaults (A/E), when binomial `|z| >= 1.96` | `|A/E - 1| < 0.10` | `0.10 to < 0.20` | `>= 0.20` |
 | Missing model fields | `0%` | Investigate any non-zero | `>= 2%` |
+
+A/E compares observed defaults with the sum of predicted PDs for the month; `z` is
+`(observed - expected) / sqrt(sum p(1 - p))`. Deviations that are not statistically
+significant stay green. A month without both outcomes reports AUC and AUC drop as missing
+rather than as no drop.
 
 These are internal project triage levels, not regulatory thresholds.
 

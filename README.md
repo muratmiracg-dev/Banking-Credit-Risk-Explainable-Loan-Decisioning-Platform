@@ -41,7 +41,14 @@ and uses a strict temporal split.
 | Approval recommendation rate | **41.7%** |
 | Approved-group observed default rate | **7.9%** |
 | Maximum monthly score PSI | **0.017** |
+| OOT actual-to-expected defaults | **1.19** (observed 18.8% vs predicted 15.9%) |
+| Monthly monitoring status (OOT) | **4 RED / 6 AMBER / 2 GREEN** (calibration) |
 | Maximum Linear SHAP additivity error | **2.66e-15** |
+
+Monthly monitoring checks calibration-in-the-large as well as ranking and drift: the model
+ranks OOT applicants stably (AUC drop below 0.03, score PSI 0.017) but under-predicts defaults
+in 10 of 12 months, by 14-39% (actual-to-expected 1.14-1.39, binomial |z| up to 6.0), so
+expected loss is understated. Before this check existed, every month showed GREEN.
 
 The fairness audit deliberately exposes a material issue: the gender demographic-parity
 difference is **1.6 percentage points**, while the age-band difference is **36.7 percentage

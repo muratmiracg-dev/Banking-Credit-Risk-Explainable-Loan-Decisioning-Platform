@@ -9,11 +9,18 @@
   "human_review_rate": 0.5834231247409863,
   "linear_shap_max_additivity_error": 2.6645352591003757e-15,
   "maximum_monthly_score_psi": 0.01668802723286052,
+  "monitoring_months_by_status": {
+    "AMBER": 6,
+    "GREEN": 2,
+    "RED": 4
+  },
+  "oot_actual_to_expected_defaults": 1.1877812939093821,
   "oot_brier": 0.13446153064887928,
   "oot_calibration_slope": 0.9808991033630107,
   "oot_default_rate": 0.18831330294239537,
   "oot_gini": 0.4752691452503439,
   "oot_ks": 0.36133801558457246,
+  "oot_mean_predicted_pd": 0.15854206823092307,
   "oot_pr_auc": 0.42127175899107694,
   "oot_roc_auc": 0.737634572625172,
   "out_of_time_applications": 12065,

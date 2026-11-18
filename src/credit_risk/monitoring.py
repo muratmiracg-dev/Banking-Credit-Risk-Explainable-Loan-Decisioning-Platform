@@ -49,6 +49,44 @@ def population_stability_index(
     )
 
 
+def calibration_in_the_large(outcomes: np.ndarray, predicted_pd: np.ndarray) -> dict[str, float]:
+    """Compare observed defaults with the defaults the model expected.
+
+    ``ae_ratio`` is actual-to-expected defaults. ``z_score`` is the normal approximation
+    to the binomial test, (observed - expected) / sqrt(sum p(1 - p)), so small cohorts
+    are not escalated on noise alone.
+    """
+    observed = np.asarray(outcomes, dtype=float)
+    expected_pd = np.asarray(predicted_pd, dtype=float)
+    if observed.size == 0 or observed.size != expected_pd.size:
+        raise ValueError("calibration inputs must be non-empty and aligned")
+    expected = float(expected_pd.sum())
+    variance = float((expected_pd * (1 - expected_pd)).sum())
+    observed_defaults = float(observed.sum())
+    return {
+        "observed_defaults": observed_defaults,
+        "expected_defaults": expected,
+        "ae_ratio": observed_defaults / expected if expected > 0 else float("nan"),
+        "z_score": (observed_defaults - expected) / np.sqrt(variance)
+        if variance > 0
+        else float("nan"),
+    }
+
+
+def _calibration_status(calibration: dict[str, float], thresholds: dict[str, Any]) -> str:
+    deviation = abs(calibration["ae_ratio"] - 1.0)
+    if (
+        not np.isfinite(deviation)
+        or abs(calibration["z_score"]) < thresholds["calibration_z_minimum"]
+    ):
+        return "GREEN"
+    return _status(
+        deviation,
+        thresholds["calibration_ae_warning"],
+        thresholds["calibration_ae_critical"],
+    )
+
+
 def _status(value: float, warning: float, critical: float) -> str:
     if value >= critical:
         return "RED"
@@ -107,8 +145,14 @@ def monitoring_report(
             reference["predicted_pd"].to_numpy(), group["predicted_pd"].to_numpy()
         )
         approval_rate = group["recommendation"].eq("APPROVE_RECOMMENDATION").mean()
-        auc_drop = max(0.0, baseline_auc - auc)
+        # A month without both outcomes has no AUC; report the drop as unknown rather
+        # than as "no drop" (max(0.0, nan) evaluated to 0.0).
+        auc_drop = max(0.0, baseline_auc - auc) if np.isfinite(auc) else float("nan")
         approval_change = abs(approval_rate - baseline_approval)
+        calibration = calibration_in_the_large(
+            group["default_12m"].to_numpy(), group["predicted_pd"].to_numpy()
+        )
+        calibration_status = _calibration_status(calibration, thresholds)
         statuses = [
             _status(
                 score_psi,
@@ -119,8 +163,11 @@ def monitoring_report(
                 auc_drop,
                 thresholds["auc_drop_warning"],
                 thresholds["auc_drop_critical"],
-            ),
+            )
+            if np.isfinite(auc_drop)
+            else "GREEN",
             "AMBER" if approval_change >= thresholds["approval_rate_change_warning"] else "GREEN",
+            calibration_status,
         ]
         overall = "RED" if "RED" in statuses else "AMBER" if "AMBER" in statuses else "GREEN"
         rows.append(
@@ -132,6 +179,11 @@ def monitoring_report(
                 "roc_auc": auc,
                 "auc_drop_vs_validation": auc_drop,
                 "brier": brier_score_loss(group["default_12m"], group["predicted_pd"]),
+                "expected_defaults": calibration["expected_defaults"],
+                "observed_defaults": calibration["observed_defaults"],
+                "actual_to_expected_defaults": calibration["ae_ratio"],
+                "calibration_z_score": calibration["z_score"],
+                "calibration_status": calibration_status,
                 "approval_rate": approval_rate,
                 "approval_rate_change": approval_change,
                 "score_psi": score_psi,
