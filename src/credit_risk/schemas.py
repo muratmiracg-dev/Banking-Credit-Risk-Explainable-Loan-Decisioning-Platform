@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
+# The training data derive debt_to_income from the other affordability fields and cap it
+# at this value; a request must carry the same derivation.
+DEBT_TO_INCOME_CAP = 1.8
+DEBT_TO_INCOME_TOLERANCE = 0.005
 
 
 class LoanApplication(BaseModel):
@@ -45,6 +50,27 @@ class LoanApplication(BaseModel):
         "Other",
     ]
     income_verified: Literal["Verified", "Unverified"]
+
+    @model_validator(mode="after")
+    def _check_derived_fields(self) -> LoanApplication:
+        # debt_to_income is the model's strongest affordability driver but is fully
+        # determined by income, existing payments and the new instalment. Accepting it
+        # as an independent number let a caller send 0.05 alongside payments that imply
+        # 0.90 and receive an approval recommendation.
+        implied = min(
+            (self.monthly_debt_payment + self.requested_amount / self.term_months)
+            / self.monthly_income,
+            DEBT_TO_INCOME_CAP,
+        )
+        if abs(self.debt_to_income - implied) > DEBT_TO_INCOME_TOLERANCE:
+            raise ValueError(
+                "debt_to_income must equal (monthly_debt_payment + requested_amount / "
+                f"term_months) / monthly_income, capped at {DEBT_TO_INCOME_CAP}; "
+                f"expected {implied:.4f}, received {self.debt_to_income:.4f}"
+            )
+        if self.delinquencies_12m > self.delinquencies_36m:
+            raise ValueError("delinquencies_12m cannot exceed delinquencies_36m")
+        return self
 
 
 class ReasonCode(BaseModel):
